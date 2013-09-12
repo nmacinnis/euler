@@ -1,4 +1,4 @@
--module(euler_002).
+-module(euler002).
 
 -export([gor/0]).
 

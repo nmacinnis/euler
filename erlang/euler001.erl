@@ -1,4 +1,4 @@
--module(euler_001).
+-module(euler001).
 -export([go/0]).
 
 go() ->
