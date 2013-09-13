@@ -20,7 +20,7 @@ strcompare(A, B) ->
 inner(Multiplier, _Multiplicand, _Max, MaxFactor, AccSet) when Multiplier >= MaxFactor ->
     AccSet;
 inner(Multiplier, Multiplicand, Max, MaxFactor, AccSet) when Multiplicand >= MaxFactor ->
-    inner(Multiplier + 1, 1, Max, MaxFactor, AccSet);
+    inner(Multiplier + 1, Multiplier + 1, Max, MaxFactor, AccSet);
 inner(Multiplier, Multiplicand, Max, MaxFactor, AccSet) ->
     Product = Multiplier * Multiplicand,
     %io:format("? ~p * ~p = ~p~n", [Multiplier, Multiplicand, Product]),
@@ -30,7 +30,7 @@ inner(Multiplier, Multiplicand, Max, MaxFactor, AccSet) ->
     MaxString = erlang:integer_to_list(Max),
     case strcompare(EqnAsList, MaxString) of
         longer ->
-            inner(Multiplier + 1, 1, Max, MaxFactor, AccSet);
+            inner(Multiplier + 1, Multiplier + 1, Max, MaxFactor, AccSet);
         shorter ->
             inner(Multiplier, Multiplicand + 1, Max, MaxFactor, AccSet);
         equal ->
