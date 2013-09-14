@@ -10,16 +10,24 @@ go() ->
 find_canceling_fractions(MinNum, MaxNum, MinDen, MaxDen) ->
     Numerators = lists:seq(MinNum, MaxNum),
     Denominators = lists:seq(MinDen, MaxDen),
-    DeepMatches = lists:map(
-            fun(Num) -> lists:filter(
-                        fun({Numer, Den}) -> is_canceling(Numer, Den) end,
-                        lists:map(
-                            fun(Den) -> {Num, Den} end,
-                            Denominators
-                            )
-                        ) end,
+    AllPairs = lists:map(
+            fun(Num) -> {Num, Denominators} end,
             Numerators
             ),
+    DeepMatches = lists:map(
+            fun({Num, Dens}) ->
+                    lists:filtermap(
+                        fun(Den) -> 
+                                case is_canceling(Num, Den) of
+                                    true -> {true, {Num, Den}};
+                                    false -> false
+                                end
+                        end,
+                        Dens
+                        ) end,
+            AllPairs
+            ),
+    %io:format("~p~n", [DeepMatches]),
     lists:flatten(DeepMatches).
 
 is_canceling(Num, Den) when (Num == Den) or (Num/Den > 1) ->
