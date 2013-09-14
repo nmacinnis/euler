@@ -1,11 +1,16 @@
 -module(euler033).
 
+-import(toolbox, []).
+
 -export([go/0]).
 
 go() ->
     Fractions = find_canceling_fractions(10, 99, 10, 99),
     io:format("~p~n", [Fractions]),
-    lists:foldl(fun({Num, Den}, Prod) -> (Den/Num) * Prod end, 1, Fractions).
+    {ProductNum, ProductDen} = lists:foldl(fun({Num, Den}, {NumProd, DenProd}) -> {Num * NumProd, Den * DenProd} end, {1, 1}, Fractions),
+    {ReducedNum, ReducedDen} = toolbox:reduce(ProductNum, ProductDen),
+    io:format("~p/~p -> ~p/~p~n", [ProductNum, ProductDen, ReducedNum, ReducedDen]),
+    ReducedDen.
 
 find_canceling_fractions(MinNum, MaxNum, MinDen, MaxDen) ->
     Numerators = lists:seq(MinNum, MaxNum),
