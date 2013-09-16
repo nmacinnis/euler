@@ -15,7 +15,7 @@ def prime_generator(limit=None):
             space = range(extent_marked, new_extent)
             print "marking %s to %s" % (extent_marked, new_extent)
             extent_marked = new_extent
-            remove_composites(space, primes)
+            space = remove_composites(space, primes)
             primes.extend(space)
             print "known primes after: ", primes
             found = len(primes)
@@ -31,15 +31,20 @@ def remove_composites(space, primes):
         prime = primes[p]
         #print space
         print "marking multiples of %s" % prime
-        for i in space:
-            if i % prime == 0:
-                space.remove(i)
+        space = [i for i in space if i % prime != 0]
         p += 1
+    return space
 
+def get_n_primes(n, limit=None):
+    pg = prime_generator(limit=limit)
+    return [pg.next() for i in xrange(n)]
 
 
 def get_100_primes():
-    pg = prime_generator(limit=100)
+    pg = prime_generator(limit=100000)
     return [pg.next() for i in xrange(25)]
 
-print get_100_primes()
+if __name__ == "__main__":
+    #print get_100_primes()
+    print get_n_primes(500, limit=100000)
+
