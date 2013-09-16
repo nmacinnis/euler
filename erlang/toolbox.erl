@@ -5,7 +5,7 @@
 -export([integer_to_digits/1, reverse_str/1, num_to_bin/1, sum_digits/1]).
 -export([is_palindrome/1, is_num_palindrome/1]).
 -export([generate_primes/2]).
-
+-export([lr_truncate/1, rl_truncate/1]).
 
 
 integer_to_digits(N) ->
@@ -76,3 +76,24 @@ is_prime(N, [Head | _]) when (Head * Head) > N ->
 is_prime(N, Primes) ->
     [Head | Rest] = Primes,
     (N rem Head =/= 0) and is_prime(N, Rest).
+
+lr_truncate(N) ->
+    [_ | Rest] = erlang:integer_to_list(N),
+    case Rest of
+        [] ->
+            [N];
+        Rest ->
+            {NRest, []} = string:to_integer(Rest),
+            [N] ++ lr_truncate(NRest)
+    end.
+
+rl_truncate(N) ->
+    Digits = erlang:integer_to_list(N),
+    Body = lists:sublist(Digits, erlang:length(Digits) - 1),
+    case Body of
+        [] ->
+            [N];
+        Body ->
+            {NBody, []} = string:to_integer(Body),
+            [N] ++ rl_truncate(NBody)
+    end.
