@@ -44,6 +44,39 @@ def get_100_primes():
     pg = prime_generator(limit=100000)
     return [pg.next() for i in xrange(25)]
 
+
+def rotate_digits(n_str):
+    """1    -> [1]
+       12   -> [12, 21]
+       123  -> [123, 231, 312]
+       1234 -> [1234, 2341, 3412, 4123]
+    """
+    n_rotations = []
+    for i in xrange(len(n_str)):
+        n_rotations.append(n_str[i:] + n_str[:i])
+    return n_rotations
+
+def permutate_digits(n_str):
+    """1   -> [1]
+       12  -> [12, 21]
+       123 -> [123, 213, 231, 132, 312, 321]
+    """
+    if len(n_str) == 1:
+        return [n_str]
+    n0 = n_str[0]
+    nr = n_str[1:]
+    nr_permutations = permutate_digits(nr)
+    n_permutations = []
+    for permutation in nr_permutations:
+        for i in xrange(len(permutation)):
+            n_permutations.append(permutation[:i] + n0 + permutation[i:])
+        n_permutations.append(permutation + n0)
+    return n_permutations
+
+
+
+
+
 if __name__ == "__main__":
     #print get_100_primes()
     print get_n_primes(500, limit=100000)
