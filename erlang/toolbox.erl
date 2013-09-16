@@ -1,6 +1,12 @@
 -module(toolbox).
 
--export([reduce/2, gcd/2, lcm/2, fact/1, sum_digits/1, integer_to_digits/1, is_palindrome/1, is_num_palindrome/1, reverse_str/1, num_to_bin/1]).
+-export([reduce/2, gcd/2, lcm/2]).
+-export([fact/1]).
+-export([integer_to_digits/1, reverse_str/1, num_to_bin/1, sum_digits/1]).
+-export([is_palindrome/1, is_num_palindrome/1]).
+-export([generate_primes/2]).
+
+
 
 integer_to_digits(N) ->
     lists:map(
@@ -43,3 +49,30 @@ reverse_str(Str) ->
 
 is_palindrome(Str) ->
     Str == lists:reverse(Str).
+
+generate_primes(Limit, none) ->
+    generate_primes(Limit, ordsets:from_list([2]));
+generate_primes(Limit, []) ->
+    generate_primes(Limit, [2]);
+generate_primes(Limit, Primes) ->
+    [Tail | _] = lists:reverse(Primes),
+    Min = Tail,
+    Max = erlang:min(Limit, Tail * Tail),
+    io:format("collecting primes from ~p to ~p ~n", [Min, Max]),
+    Space = lists:seq(Min, Max),
+    NewPrimes = ordsets:filter(fun(N) -> is_prime(N, Primes) end, Space),
+    Union = ordsets:union(Primes, NewPrimes),
+    case Max of
+        Limit ->
+            Union;
+        Max ->
+            generate_primes(Limit, Union)
+    end.
+
+is_prime(_N, []) ->
+    true;
+is_prime(N, [Head | _]) when (Head * Head) > N ->
+    true;
+is_prime(N, Primes) ->
+    [Head | Rest] = Primes,
+    (N rem Head =/= 0) and is_prime(N, Rest).
