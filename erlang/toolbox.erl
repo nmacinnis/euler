@@ -6,6 +6,7 @@
 -export([is_palindrome/1, is_num_palindrome/1]).
 -export([generate_primes/2]).
 -export([lr_truncate/1, rl_truncate/1]).
+-export([is_pandigital/1, is_pandigital/2]).
 
 
 integer_to_digits(N) ->
@@ -97,3 +98,10 @@ rl_truncate(N) ->
             {NBody, []} = string:to_integer(Body),
             [N] ++ rl_truncate(NBody)
     end.
+
+is_pandigital(N) ->
+    is_pandigital(N, lists:seq(0, 9)).
+
+is_pandigital(N, Digits) ->
+    NDigits = integer_to_digits(N),
+    lists:sort(NDigits) == lists:sort(Digits).
