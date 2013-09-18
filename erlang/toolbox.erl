@@ -5,6 +5,7 @@
 -export([integer_to_digits/1, reverse_str/1, num_to_bin/1, sum_digits/1]).
 -export([is_palindrome/1, is_num_palindrome/1]).
 -export([generate_primes/2]).
+-export([generate_triangle_numbers/1]).
 -export([lr_truncate/1, rl_truncate/1]).
 -export([is_pandigital/1, is_pandigital/2]).
 
@@ -105,3 +106,11 @@ is_pandigital(N) ->
 is_pandigital(N, Digits) ->
     NDigits = integer_to_digits(N),
     lists:sort(NDigits) == lists:sort(Digits).
+
+generate_triangle_numbers(Count) ->
+    {Numbers, _} = lists:mapfoldl(
+        fun(X, Sum) -> {X + Sum, X + Sum} end,
+        0,
+        lists:seq(1, Count)
+        ),
+    Numbers.
