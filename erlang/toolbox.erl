@@ -2,11 +2,14 @@
 
 -export([reduce/2, gcd/2, lcm/2]).
 -export([fact/1]).
--export([integer_to_digits/1, reverse_str/1, num_to_bin/1, sum_digits/1]).
+-export([integer_to_digits/1, digits_to_integer/1, sum_digits/1, permutate_digits/1]).
+-export([reverse_str/1, num_to_bin/1]).
+-export([boolean_to_integer/1]).
 -export([is_palindrome/1, is_num_palindrome/1]).
 -export([generate_primes/2]).
 -export([generate_triangle_numbers/1]).
 -export([lr_truncate/1, rl_truncate/1]).
+-export([find_pandigital/1]).
 -export([is_pandigital/1, is_pandigital/2]).
 
 
@@ -17,6 +20,21 @@ integer_to_digits(N) ->
                 Digit
         end,
         erlang:integer_to_list(N)).
+
+digits_to_integer(Digits) ->
+    erlang:element(
+        1,
+        lists:foldr(
+            fun(Digit, {Acc, Place}) -> {Acc + (Digit * Place), Place * 10} end,
+            {0, 1},
+            Digits
+            )
+        ).
+
+boolean_to_integer(true) ->
+    1;
+boolean_to_integer(false) ->
+    0.
 
 sum_digits(N) ->
     lists:sum(integer_to_digits(N)).
@@ -114,3 +132,25 @@ generate_triangle_numbers(Count) ->
         lists:seq(1, Count)
         ),
     Numbers.
+
+permutate_digits([]) ->
+    [[]];
+permutate_digits(Digits) ->
+    [
+        [Head | Tail] || Head <- Digits, Tail <- permutate_digits(Digits -- [Head])
+    ].
+
+% from http://www.erlang.org/doc/programming_examples/list_comprehensions.html
+% perms([]) -> [[]];
+% perms(L)  -> [[H|T] || H <- L, T <- perms(L--[H])].
+
+find_pandigital(9876543210) ->
+    none;
+find_pandigital(Last) ->
+    Next = Last + 1,
+    case toolbox:is_pandigital(Next) of
+        true ->
+            Next;
+        false ->
+            find_pandigital(Next)
+    end.
