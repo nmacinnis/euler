@@ -11,6 +11,7 @@
 -export([lr_truncate/1, rl_truncate/1]).
 -export([find_pandigital/1]).
 -export([is_pandigital/1, is_pandigital/2]).
+-export([pentagonize/1, is_pentagonal/1]).
 
 
 integer_to_digits(N) ->
@@ -154,3 +155,10 @@ find_pandigital(Last) ->
         false ->
             find_pandigital(Next)
     end.
+
+pentagonize(N) ->
+    (N * ((3 * N) - 1)) div 2.
+
+is_pentagonal(N) when N > 0 ->
+    X = ((0.5 + math:sqrt(0.25 + (6 * N))) / 3),
+    X == erlang:trunc(X).
