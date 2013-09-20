@@ -12,6 +12,8 @@
 -export([find_pandigital/1]).
 -export([is_pandigital/1, is_pandigital/2]).
 -export([pentagonize/1, is_pentagonal/1]).
+-export([triangulize/1, is_triangular/1]).
+-export([hexagonize/1, is_hexagonal/1]).
 
 
 integer_to_digits(N) ->
@@ -159,6 +161,20 @@ find_pandigital(Last) ->
 pentagonize(N) ->
     (N * ((3 * N) - 1)) div 2.
 
+triangulize(N) ->
+    (N * (N + 1)) div 2.
+
+hexagonize(N) ->
+    N * ((2 * N) - 1).
+
 is_pentagonal(N) when N > 0 ->
     X = ((0.5 + math:sqrt(0.25 + (6 * N))) / 3),
+    X == erlang:trunc(X).
+
+is_triangular(N) when N > 0 ->
+    X = math:sqrt((8 * N) + 1),
+    X == erlang:trunc(X).
+
+is_hexagonal(N) when N > 0 ->
+    X = (math:sqrt((8 * N) + 1) + 1) / 4,
     X == erlang:trunc(X).
