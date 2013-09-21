@@ -1,7 +1,7 @@
 -module(toolbox).
 
 -export([reduce/2, gcd/2, lcm/2]).
--export([fact/1]).
+-export([fact/1, pow/2]).
 -export([integer_to_digits/1, digits_to_integer/1, sum_digits/1, permutate_digits/1]).
 -export([reverse_str/1, num_to_bin/1]).
 -export([boolean_to_integer/1]).
@@ -46,6 +46,9 @@ fact(N) when N =< 1 ->
     1;
 fact(N) ->
     N * fact(N - 1).
+
+pow(N, P) ->
+    erlang:trunc(math:pow(N, P)).
 
 reduce(Num, Den) ->
     Factor = gcd(Num, Den),
