@@ -6,7 +6,7 @@
 -export([reverse_str/1, num_to_bin/1]).
 -export([boolean_to_integer/1]).
 -export([is_palindrome/1, is_num_palindrome/1]).
--export([generate_primes/2]).
+-export([generate_primes/1, generate_primes/2, prime_factorize/1, prime_factorize/2, reduce_factoring/1]).
 -export([generate_triangle_numbers/1]).
 -export([lr_truncate/1, rl_truncate/1]).
 -export([find_pandigital/1]).
@@ -73,6 +73,8 @@ reverse_str(Str) ->
 is_palindrome(Str) ->
     Str == lists:reverse(Str).
 
+generate_primes(Limit) ->
+    generate_primes(Limit, none).
 generate_primes(Limit, none) ->
     generate_primes(Limit, ordsets:from_list([2]));
 generate_primes(Limit, []) ->
@@ -99,6 +101,45 @@ is_prime(N, [Head | _]) when (Head * Head) > N ->
 is_prime(N, Primes) ->
     [Head | Rest] = Primes,
     (N rem Head =/= 0) and is_prime(N, Rest).
+
+prime_factorize(N) ->
+    Primes = generate_primes(N, none),
+    prime_factorize(N, Primes).
+prime_factorize(N, Primes) ->
+    NPrimes = case N > (2 * lists:last(Primes)) of
+        true ->
+            generate_primes(N, Primes);
+        false ->
+            Primes
+    end,
+    {iter(N, NPrimes, []), NPrimes}.
+
+iter(_N, [], Acc) ->
+    Acc;
+iter(N, Primes, Acc) ->
+    [Head | Tail] = Primes,
+    case (N rem Head) == 0 of
+        true ->
+            iter((N div Head), Primes, Acc ++ [Head]);
+        false ->
+            iter(N, Tail, Acc)
+    end.
+
+reduce_factoring(Factors) ->
+    lists:foldl(
+        fun(Factor, Keylist) ->
+                case lists:keyfind(Factor, 1, Keylist) of
+                    {Factor, Power} ->
+                        lists:keyreplace(Factor, 1, Keylist, {Factor, Power + 1});
+                    false ->
+                        Keylist ++ [{Factor, 1}]
+                end
+        end,
+        [],
+        Factors
+        ).
+
+
 
 lr_truncate(N) ->
     [_ | Rest] = erlang:integer_to_list(N),
