@@ -74,6 +74,15 @@ def permutate_digits(n_str):
     return n_permutations
 
 
+def nmin(A, B):
+    if not A and not B:
+        return 0
+    elif not A:
+        return B
+    elif not B:
+        return A
+    else:
+        return min(A, B)
 
 
 
