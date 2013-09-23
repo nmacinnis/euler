@@ -1,12 +1,14 @@
 -module(toolbox).
 
 -export([reduce/2, gcd/2, lcm/2]).
--export([fact/1, pow/2]).
+-export([fact/1, pow/2, product/1]).
 -export([integer_to_digits/1, digits_to_integer/1, sum_digits/1, permutate_digits/1]).
 -export([reverse_str/1, num_to_bin/1]).
 -export([boolean_to_integer/1]).
 -export([is_palindrome/1, is_num_palindrome/1]).
--export([generate_primes/1, generate_primes/2, prime_factorize/1, prime_factorize/2, reduce_factoring/1]).
+-export([generate_primes/1, generate_primes/2]).
+-export([prime_factorize/1, prime_factorize/2, reduce_factoring/1]).
+-export([resilience/1, resilience/2, totient/1, totient/2, totient_ratio/1]).
 -export([generate_triangle_numbers/1]).
 -export([lr_truncate/1, rl_truncate/1]).
 -export([find_pandigital/1]).
@@ -50,6 +52,13 @@ fact(N) ->
 pow(N, P) ->
     erlang:trunc(math:pow(N, P)).
 
+product(Numbers) ->
+    lists:foldl(
+        fun(N, Product) -> N * Product end,
+        1,
+        Numbers
+        ).
+
 reduce(Num, Den) ->
     Factor = gcd(Num, Den),
     {Num div Factor, Den div Factor}.
@@ -83,18 +92,23 @@ generate_primes(Limit, none) ->
 generate_primes(Limit, []) ->
     generate_primes(Limit, [2]);
 generate_primes(Limit, Primes) ->
-    [Tail | _] = lists:reverse(Primes),
-    Min = Tail,
-    Max = erlang:min(Limit, Tail * Tail),
-    io:format("collecting primes from ~p to ~p ~n", [Min, Max]),
-    Space = lists:seq(Min, Max),
-    NewPrimes = ordsets:filter(fun(N) -> is_prime(N, Primes) end, Space),
-    Union = ordsets:union(Primes, NewPrimes),
-    case Max of
-        Limit ->
-            Union;
-        Max ->
-            generate_primes(Limit, Union)
+    Last = lists:last(Primes),
+    case Limit =< Last of
+        true ->
+            Primes;
+        false ->
+            Min = Last,
+            Max = erlang:min(Limit, Last * Last),
+            io:format("collecting primes from ~p to ~p ~n", [Min, Max]),
+            Space = lists:seq(Min, Max),
+            NewPrimes = ordsets:filter(fun(N) -> is_prime(N, Primes) end, Space),
+            Union = ordsets:union(Primes, NewPrimes),
+            case Max of
+                Limit ->
+                    Union;
+                Max ->
+                    generate_primes(Limit, Union)
+            end
     end.
 
 is_prime(_N, []) ->
@@ -142,6 +156,37 @@ reduce_factoring(Factors) ->
         Factors
         ).
 
+resilience(N) ->
+    resilience(N, none).
+resilience(N, Primes) ->
+    NPrimes = generate_primes(N, Primes),
+    PrimesLTN = lists:filter(
+            fun(P) -> P =< N end,
+            NPrimes
+            ),
+    Pr = product(PrimesLTN),
+    totient_ratio(Pr, NPrimes).
+
+totient_ratio(Pr) ->
+    totient_ratio(Pr, [2]).
+totient_ratio(Pr, Primes) ->
+    {To, NPrimes} = totient(Pr, Primes),
+    {{Pr, To, (To / (Pr - 1))}, NPrimes}.
+
+
+totient(D) ->
+    totient(D, [2]).
+totient(D, Primes) ->
+    {Factors, NPrimes} = prime_factorize(D, Primes),
+    UniqueFactors = sets:to_list(sets:from_list(Factors)),
+    Totient = erlang:trunc(
+        lists:foldl(
+            fun(Factor, Product) -> Product * (1 - (1 / Factor)) end,
+            D,
+            UniqueFactors
+            )
+        ),
+    {Totient, NPrimes}.
 
 
 lr_truncate(N) ->
