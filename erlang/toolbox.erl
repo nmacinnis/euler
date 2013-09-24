@@ -16,7 +16,7 @@
 -export([pentagonize/1, is_pentagonal/1]).
 -export([triangulize/1, is_triangular/1]).
 -export([hexagonize/1, is_hexagonal/1]).
-
+-export([generate_fibs/1]).
 
 integer_to_digits(N) ->
     lists:map(
@@ -267,3 +267,20 @@ is_triangular(N) when N > 0 ->
 is_hexagonal(N) when N > 0 ->
     X = (math:sqrt((8 * N) + 1) + 1) / 4,
     X == erlang:trunc(X).
+
+generate_fibs(Max) ->
+    generate_fibs(1, 1, [1, 1], Max).
+generate_fibs(P1, P2, List, Max) ->
+    case P1 + P2 < Max of
+        true ->
+            generate_fibs(
+                P2,
+                P1 + P2,
+                List ++ [P1 + P2],
+                Max
+            );
+        _ ->
+            List
+    end.
+
+
