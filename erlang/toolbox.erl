@@ -17,6 +17,8 @@
 -export([triangulize/1, is_triangular/1]).
 -export([hexagonize/1, is_hexagonal/1]).
 -export([generate_fibs/1]).
+-export([parse_roman/1, to_roman/1]).
+-export([read_file/1]).
 
 integer_to_digits(N) ->
     lists:map(
@@ -283,4 +285,73 @@ generate_fibs(P1, P2, List, Max) ->
             List
     end.
 
+parse_roman(Chars) ->
+    Subtractives = [{4, "IV"}, {9, "IX"}, {40, "XL"}, {90, "XC"}, {400, "CD"}, {900, "CM"}],
+    {Sum, OutStr} = lists:foldl(
+            fun({Value, Repr}, {Sum, OutStr}) ->
+                    case contains_subtractive(OutStr, Repr) of
+                        nomatch ->
+                            {Sum, OutStr};
+                        _ ->
+                            {Sum + Value, remove_subtractive(OutStr, Repr)}
+                    end
+            end,
+            {0, Chars},
+            Subtractives
+            ),
+    %io:format("~p~n", [OutStr]),
+    lists:foldl(
+        fun(Char, Acc) ->
+                Acc + case Char of
+                    $I ->
+                        1;
+                    $V ->
+                        5;
+                    $X ->
+                        10;
+                    $L ->
+                        50;
+                    $C ->
+                        100;
+                    $D ->
+                        500;
+                    $M ->
+                        1000
+                end
+        end,
+        Sum,
+        OutStr
+        ).
 
+contains_subtractive(String, Subtractive) ->
+    re:run(String, Subtractive).
+
+remove_subtractive(String, Subtractive) ->
+    re:replace(String, Subtractive, "", [{return, list}]).
+
+to_roman(Int) ->
+    Hi = convert_roman((Int div 100), $C, $D, $M),
+    Med = convert_roman(((Int rem 100) div 10), $X, $L, $C),
+    Low = convert_roman((Int rem 10), $I, $V, $X),
+    Hi ++ Med ++ Low.
+
+convert_roman(Int, One, Five, Ten) ->
+    if
+        (Int div 10) > 0 ->
+            [ Ten | convert_roman((Int - 10), One, Five, Ten) ];
+        Int == 9 ->
+            [ One, Ten ];
+        (Int div 5) > 0 ->
+            [ Five | convert_roman((Int - 5), One, Five, Ten) ];
+        Int == 4 ->
+            [ One, Five ];
+        Int > 0 ->
+            [ One | convert_roman((Int - 1), One, Five, Ten) ];
+        true ->
+            []
+    end.
+
+read_file(File) ->
+    {ok, Data} = file:read_file(File),
+    Str = erlang:binary_to_list(Data),
+    re:split(Str, "\n", [{return, list}]).
