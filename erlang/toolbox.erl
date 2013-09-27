@@ -8,6 +8,7 @@
 -export([is_palindrome/1, is_num_palindrome/1]).
 -export([generate_primes/1, generate_primes/2]).
 -export([prime_factorize/1, prime_factorize/2, reduce_factoring/1]).
+-export([is_prime/2]).
 -export([resilience/1, resilience/2, totient/1, totient/2, totient_ratio/1]).
 -export([generate_triangle_numbers/1]).
 -export([lr_truncate/1, rl_truncate/1]).
