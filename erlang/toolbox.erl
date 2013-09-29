@@ -20,6 +20,8 @@
 -export([generate_fibs/1]).
 -export([parse_roman/1, to_roman/1]).
 -export([read_file/1]).
+-export([reflect/3, line/2, angle/2]).
+-export([tangent_slope/2, intersection/2]).
 
 integer_to_digits(N) ->
     lists:map(
@@ -356,3 +358,41 @@ read_file(File) ->
     {ok, Data} = file:read_file(File),
     Str = erlang:binary_to_list(Data),
     re:split(Str, "\n", [{return, list}]).
+
+
+
+p(Base, Power) -> math:pow(Base, Power).
+
+reflect(Intersection, {LineIncM, _LineIncB}, Ellipse) ->
+    TSlope = tangent_slope(Ellipse, Intersection),
+    ThTSlope = math:atan(TSlope),
+    ThInc = angle(LineIncM, TSlope),
+    ThRef = ThTSlope + math:pi() - ThInc,
+    RefSlope = math:tan(ThRef),
+    LineRef = line(RefSlope, Intersection),
+    LineRef.
+
+
+line({Ax, Ay}, {Bx, By}) ->
+    M = (By - Ay) / (Bx - Ax),
+    line(M, {Bx, By});
+line(M, {Bx, By}) ->
+    B = By - M * (Bx),
+    {M, B}.
+
+tangent_slope({EllipseA, EllipseB}, {X, Y}) ->
+    -(p(EllipseB, 2) / p(EllipseA, 2)) * (X / Y).
+
+angle(Slope1, Slope2) ->
+    math:atan( (Slope1 - Slope2) / (1 + (Slope1 * Slope2)) ).
+
+intersection({EllipseA, EllipseB}, {LineM, LineB}) ->
+    A = p(LineM, 2) + ( p(EllipseB, 2) / p(EllipseA, 2)),
+    B = 2 * LineM * LineB,
+    C = p(LineB, 2) - p(EllipseB, 2),
+    Zero1 = (-B + math:sqrt(p(B, 2) - 4*A*C)) / (2*A),
+    Zero2 = (-B - math:sqrt(p(B, 2) - 4*A*C)) / (2*A),
+    Intersection1 = {Zero1, (LineM * Zero1) + LineB},
+    Intersection2 = {Zero2, (LineM * Zero2) + LineB},
+    {Intersection1, Intersection2}.
+
