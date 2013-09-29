@@ -2,7 +2,7 @@
 
 -export([reduce/2, gcd/2, lcm/2]).
 -export([fact/1, pow/2, product/1]).
--export([integer_to_digits/1, digits_to_integer/1, sum_digits/1, permutate_digits/1]).
+-export([integer_to_digits/1, digits_to_integer/1, sum_digits/1, permutate_digits/1, has_same_digits/2]).
 -export([reverse_str/1, num_to_bin/1]).
 -export([boolean_to_integer/1]).
 -export([is_palindrome/1, is_num_palindrome/1]).
@@ -22,6 +22,7 @@
 -export([read_file/1]).
 -export([reflect/3, line/2, angle/2]).
 -export([tangent_slope/2, intersection/2]).
+-export([oom/1]).
 
 integer_to_digits(N) ->
     lists:map(
@@ -396,3 +397,9 @@ intersection({EllipseA, EllipseB}, {LineM, LineB}) ->
     Intersection2 = {Zero2, (LineM * Zero2) + LineB},
     {Intersection1, Intersection2}.
 
+oom(N) ->
+    erlang:trunc(math:log10(N)).
+
+has_same_digits(A, B) ->
+    (toolbox:oom(A) == toolbox:oom(B)) andalso
+        (lists:sort(toolbox:integer_to_digits(A)) == lists:sort(toolbox:integer_to_digits(B))).
