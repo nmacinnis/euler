@@ -21,8 +21,9 @@
 -export([parse_roman/1, to_roman/1]).
 -export([read_file/1]).
 -export([reflect/3, line/2, angle/2]).
--export([tangent_slope/2, intersection/2]).
+-export([tangent_slope/2, intersection/2, distance/2]).
 -export([oom/1]).
+-export([six_places/1]).
 
 integer_to_digits(N) ->
     lists:map(
@@ -397,9 +398,15 @@ intersection({EllipseA, EllipseB}, {LineM, LineB}) ->
     Intersection2 = {Zero2, (LineM * Zero2) + LineB},
     {Intersection1, Intersection2}.
 
+distance({Ax, Ay}, {Bx, By}) ->
+    math:sqrt(p(Bx - Ax, 2) + p(By - Ay, 2)).
+
 oom(N) ->
     erlang:trunc(math:log10(N)).
 
 has_same_digits(A, B) ->
     (toolbox:oom(A) == toolbox:oom(B)) andalso
         (lists:sort(toolbox:integer_to_digits(A)) == lists:sort(toolbox:integer_to_digits(B))).
+
+six_places(F) ->
+    erlang:round(F * 1000000) / 1000000.
