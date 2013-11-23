@@ -15,7 +15,7 @@ gstr = """75
 04 62 98 27 23 09 70 98 73 93 38 53 60 04 23"""
 #0 - 0,1
 #0 - 0,1 : 1: 1,2
-#0 - 0,1 : 1 
+#0 - 0,1 : 1
 # 17 47 82
 # 95 64
 # 75
@@ -28,11 +28,11 @@ for line in glns:
     graph.append([int(istr) for istr in line.split()])
 graph = graph[::-1]
 for i in range(len(graph) - 1):
-    
+
     for j in range(len(graph[i]) - 1):
-        graph[i+1][j] += max(
+        graph[i + 1][j] += max(
             graph[i][j],
-            graph[i][j+1]
+            graph[i][j + 1]
         )
 
 print max(graph[len(graph) - 1])

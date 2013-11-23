@@ -30,9 +30,9 @@ prodlst = []
 for row in graph:
     for i in range(3, 20):
         #print i
-        b = row[i-3 : i + 1]
+        b = row[i - 3: i + 1]
         #print b
-        prod = b[0]*b[1]*b[2]*b[3]
+        prod = b[0] * b[1] * b[2] * b[3]
         prodlst.append(prod)
 print max(prodlst)
 
@@ -45,9 +45,9 @@ prodlst = []
 for row in graph2:
     for i in range(3, 20):
         #print i
-        b = row[i-3 : i + 1]
+        b = row[i - 3: i + 1]
         #print b
-        prod = b[0]*b[1]*b[2]*b[3]
+        prod = b[0] * b[1] * b[2] * b[3]
         prodlst.append(prod)
 print max(prodlst)
 
@@ -55,9 +55,10 @@ prodlst = []
 for i in range(17):
     for j in range(17):
         #print i
-        b = [graph[i][j], graph[i+1][j+1], graph[i+2][j+2], graph[i+3][j+3]]
+        b = [graph[i][j], graph[i + 1][j + 1], graph[i + 2][j + 2],
+             graph[i + 3][j + 3]]
         #print b
-        prod = b[0]*b[1]*b[2]*b[3]
+        prod = b[0] * b[1] * b[2] * b[3]
         prodlst.append(prod)
 print max(prodlst)
 #print graph2
@@ -66,8 +67,9 @@ prodlst = []
 for i in range(17):
     for j in range(17):
         #print i
-        b = [graph3[i][j], graph3[i+1][j+1], graph3[i+2][j+2], graph3[i+3][j+3]]
+        b = [graph3[i][j], graph3[i + 1][j + 1], graph3[i + 2][j +
+                                                               2], graph3[i + 3][j + 3]]
         #print b
-        prod = b[0]*b[1]*b[2]*b[3]
+        prod = b[0] * b[1] * b[2] * b[3]
         prodlst.append(prod)
 print max(prodlst)

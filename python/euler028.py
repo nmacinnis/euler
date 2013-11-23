@@ -3,9 +3,9 @@
 
 addend = 1
 sum = 1
-for i in range(1,501):
-    increment = 2*i #0, 2, 4
-    for j in range(1,5):
+for i in range(1, 501):
+    increment = 2 * i  # 0, 2, 4
+    for j in range(1, 5):
         addend += increment
         sum += addend
         print addend

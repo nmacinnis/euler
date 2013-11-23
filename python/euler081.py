@@ -15,12 +15,9 @@ if __name__ == "__main__":
             cell_left = None
             if i != 0:
                 cell_above = matrix[i - 1][j]
-            if j!= 0:
+            if j != 0:
                 cell_left = matrix[i][j - 1]
             min_neighbor = nmin(cell_above, cell_left)
             matrix[i][j] = cell + min_neighbor
 
     print matrix[-1][-1]
-
-
-

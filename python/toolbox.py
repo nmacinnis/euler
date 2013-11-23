@@ -11,7 +11,8 @@ def prime_generator(limit=None):
         retrieved += 1
         if retrieved == found:
             # we've got more work to do!
-            new_extent = min(max_found * max_found, limit) if limit else max_found * max_found
+            new_extent = min(max_found * max_found,
+                             limit) if limit else max_found * max_found
             space = range(extent_marked, new_extent)
             print "marking %s to %s" % (extent_marked, new_extent)
             extent_marked = new_extent
@@ -20,6 +21,7 @@ def prime_generator(limit=None):
             print "known primes after: ", primes
             found = len(primes)
             max_found = primes[-1]
+
 
 def remove_composites(space, primes):
     print "known primes before: ", primes
@@ -34,6 +36,7 @@ def remove_composites(space, primes):
         space = [i for i in space if i % prime != 0]
         p += 1
     return space
+
 
 def get_n_primes(n, limit=None):
     pg = prime_generator(limit=limit)
@@ -55,6 +58,7 @@ def rotate_digits(n_str):
     for i in xrange(len(n_str)):
         n_rotations.append(n_str[i:] + n_str[:i])
     return n_rotations
+
 
 def permutate_digits(n_str):
     """1   -> [1]
@@ -85,8 +89,6 @@ def nmin(A, B):
         return min(A, B)
 
 
-
 if __name__ == "__main__":
     #print get_100_primes()
     print get_n_primes(500, limit=100000)
-

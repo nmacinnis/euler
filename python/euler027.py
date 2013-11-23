@@ -1,16 +1,18 @@
 def calc_quad(n, a, b):
-    return (n*n) + (a*n) + b
+    return (n * n) + (a * n) + b
+
 
 def check_prime(c, priml):
     if c < 2:
         return False
     bp = priml[len(priml) - 1]
-    while bp*bp < c:
+    while bp * bp < c:
         bp += 1
         if is_prime(bp, priml):
             priml.append(bp)
     return is_prime(c, priml)
     #not actually adding c to prime list at this time
+
 
 def is_prime(k, priml):
     for p in priml:
@@ -27,7 +29,7 @@ for z in range(2, 100):
         pl.append(z)
 print "go"
 max = 0
-for a in range(-999, 1000): # starting with 0...
+for a in range(-999, 1000):  # starting with 0...
     for b in range(-999, 1000):
         n = 0
         count = -1

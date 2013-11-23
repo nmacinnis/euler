@@ -1,9 +1,10 @@
 
-def divs(k): # number like 28
+
+def divs(k):  # number like 28
     j = 1
     count = 0
     low = k + 1
-    while j < low: # j is 1,2,3,5,7
+    while j < low:  # j is 1,2,3,5,7
         if k % j == 0:
             low = k / j
             count += 2
@@ -26,8 +27,3 @@ while cur_divs < 500:
         print "max: " + str(cur_divs) + " it: " + str(it)
     if cur_divs > 500:
         print it
-
-
-
-
-
